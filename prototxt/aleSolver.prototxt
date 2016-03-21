@@ -1,0 +1,12 @@
+net: "./prototxt/qnet_nature.prototxt"
+solver_type: RMSPROP
+base_lr: 0.00025
+lr_policy: "fixed"
+momentum: 0.95
+weight_decay: 0.0005
+display: 1000
+max_iter: 100000
+snapshot: 50000
+snapshot_prefix: "snapshots/deepRL_ale_rmsprop"
+solver_mode: CPU
+rms_decay: 0.98
