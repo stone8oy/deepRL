@@ -1,2 +1,23 @@
 # deepRL
 deep-q-learning for atari games with caffe 
+
+Refered impls
+-------------
+https://github.com/stone8oy/deep_q_rl ,https://github.com/muupan/dqn-in-the-caffe
+
+Install dependencies
+--------------------
+caffe required 
+
+bash setup.sh （only install the ALE environment）
+
+Build
+-------
+bash build.sh
+
+
+Run
+---
+(gpu is under testing)
+
+bash run_cpu.sh 
