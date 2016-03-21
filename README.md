@@ -3,7 +3,9 @@ deep-q-learning for atari games with caffe
 
 Refered impls
 -------------
-https://github.com/stone8oy/deep_q_rl ,https://github.com/muupan/dqn-in-the-caffe
+https://github.com/spragunr/deep_q_rl
+
+https://github.com/muupan/dqn-in-the-caffe
 
 Install dependencies
 --------------------
