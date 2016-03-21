@@ -1,0 +1,178 @@
+name: "qnet_nature_deploy"
+layer {
+  name: "frames_input_layer"
+  type: "MemoryData"
+  top: "frames"
+  top: "dummy1"
+  memory_data_param {
+    batch_size: 32
+    channels: 4
+    height: 84
+    width: 84
+  }
+}
+layer {
+  name: "target_input_layer"
+  type: "MemoryData"
+  top: "target"
+  top: "dummy2"
+  memory_data_param {
+    batch_size: 32
+    channels: 18
+    height: 1
+    width: 1
+  }
+}
+layer {
+  name: "filter_input_layer"
+  type: "MemoryData"
+  top: "filter"
+  top: "dummy3"
+  memory_data_param {
+    batch_size: 32
+    channels: 18
+    height: 1
+    width: 1
+  }
+}
+layer {
+  name: "silence_layer"
+  type: "Silence"
+  bottom: "dummy1"
+  bottom: "dummy2"
+  bottom: "dummy3"
+}
+layer {
+  name: "conv1"
+  type: "Convolution"
+  bottom: "frames"
+  top: "conv1"
+  convolution_param {
+    num_output: 32
+    kernel_size: 8
+    stride: 4
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+  }
+}
+layer {
+  name: "relu1"
+  type: "ReLU"
+  bottom: "conv1"
+  top: "conv1"
+  relu_param {
+    negative_slope: 0.01
+  }
+}
+layer {
+  name: "conv2"
+  type: "Convolution"
+  bottom: "conv1"
+  top: "conv2"
+  convolution_param {
+    num_output: 64
+    kernel_size: 4
+    stride: 2
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+  }
+}
+layer {
+  name: "relu2"
+  type: "ReLU"
+  bottom: "conv2"
+  top: "conv2"
+  relu_param {
+    negative_slope: 0.01
+  }
+}
+
+layer {
+  name: "conv3"
+  type: "Convolution"
+  bottom: "conv2"
+  top: "conv3"
+  convolution_param {
+    num_output: 64
+    kernel_size: 3
+    stride: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+  }
+}
+layer {
+  name: "relu3"
+  type: "ReLU"
+  bottom: "conv3"
+  top: "conv3"
+  relu_param {
+    negative_slope: 0.01
+  }
+}
+layer {
+  name: "fc1"
+  type: "InnerProduct"
+  bottom: "conv3"
+  top: "ip1"
+  inner_product_param {
+    num_output: 512
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+  }
+}
+layer {
+  name: "relu4"
+  type: "ReLU"
+  bottom: "ip1"
+  top: "ip1"
+  relu_param {
+    negative_slope: 0.01
+  }
+}
+layer {
+  name: "fc2"
+  type: "InnerProduct"
+  bottom: "ip1"
+  top: "q_values"
+  inner_product_param {
+    num_output: 18
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+  }
+}
+layer {
+  name: "fc_filter"
+  type: "InnerProduct"
+  bottom: "filter"
+  top: "fc_filter"
+  inner_product_param {
+    num_output: 18
+  }
+}
+layer {
+  name: "eltwise_layer"
+  type: "Eltwise"
+  bottom: "q_values"
+  bottom: "fc_filter"
+  top: "filtered_q_values"
+  eltwise_param {
+    operation: PROD
+  }
+}
+layer {
+  name: "loss"
+  type: "EuclideanLoss"
+  bottom: "filtered_q_values"
+  bottom: "target"
+  top: "loss"
+}
