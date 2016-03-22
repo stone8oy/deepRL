@@ -44,7 +44,7 @@ void DeepQLearner::Initialize() {
   assert(frames_input_layer_);
   assert(deepRL::HasBlobSize(
       *net_->blob_by_name("frames"),
-      kMinibatchSize,
+      1,
       kInputFrameCount,
       kCroppedFrameSize,
       kCroppedFrameSize));
@@ -55,7 +55,7 @@ void DeepQLearner::Initialize() {
           net_->layer_by_name("target_input_layer"));
   assert(target_input_layer_);
   assert(deepRL::HasBlobSize(
-      *net_->blob_by_name("target"), kMinibatchSize, kOutputCount, 1, 1));
+      *net_->blob_by_name("target"), 1, kOutputCount, 1, 1));
 
   // Cache pointers to filter input layers
   filter_input_layer_ =
@@ -63,60 +63,50 @@ void DeepQLearner::Initialize() {
           net_->layer_by_name("filter_input_layer"));
   assert(filter_input_layer_);
   assert(deepRL::HasBlobSize(
-      *net_->blob_by_name("filter"), kMinibatchSize, kOutputCount, 1, 1));
+      *net_->blob_by_name("filter"), 1, kOutputCount, 1, 1));
 }
 
-/** ugly code .may be we could set batchsize=1, 
- * then we iterate minibatchsize times, so we can compute for a single frame
- **/
-ActionPairVec DeepQLearner::GetBatchQvalue(const InputFramesVec & frames_batch,const NetSp& qnet) {
-  //(inputframe1,inputframe2,...,inputframe_batch_size)
-  assert(frames_batch.size() <= kMinibatchSize);
-  std::array<float, kMinibatchDataSize> frames_input;
-
-  for (auto i = 0; i < frames_batch.size(); ++i) {
-    // Input frames to the net and compute Q values for each legal actions
-    for (auto j = 0; j < kInputFrameCount; ++j) {//
-      const auto& frame_data = frames_batch[i][j];
-      std::copy(
-          frame_data->begin(),
-          frame_data->end(),
-          frames_input.begin() + i * kInputDataSize +
-              j * kCroppedFrameDataSize);
-    }
+//one inputframe mode
+std::vector<float>  DeepQLearner::ForwardQvalue(const InputFrames& frames_input,const NetSp& qnet){
+  
+  std::vector<float> q_values(legal_actions_.size());
+  std::array<float,kInputDataSize> frames_input_data;
+  for (auto j = 0; j < kInputFrameCount; ++j) {//
+    const auto& frame_data = frames_input[j];
+    std::copy(
+        frame_data->begin(),
+        frame_data->end(),
+        frames_input_data.begin() + j*kCroppedFrameDataSize);
   }
+  FillData2Layers(frames_input_data, dummy_input_data_, dummy_input_data_);
 
-  FillData2Layers(frames_input, dummy_input_data_, dummy_input_data_);
   qnet->Forward();//test ,now we got the qvalue
 
-  ActionPairVec results;
-  results.reserve(frames_batch.size());
-  for (auto i = 0; i < frames_batch.size(); ++i) {
-    // Get the Q values from the net
-    const auto action_evaluator = [&](Action action) {
-      const auto q = q_values_blob_->data_at(i, static_cast<int>(action), 0, 0);
-      assert(!std::isnan(q));
-      return q;
-    };
 
-    std::vector<float> q_values(legal_actions_.size());
-    std::transform(
-        legal_actions_.begin(),
-        legal_actions_.end(),
-        q_values.begin(),
-        action_evaluator);
+  // Get the Q values from the net
+  const auto action_evaluator = [&](Action action) {
+    const auto q = q_values_blob_->data_at(0, static_cast<int>(action), 0, 0);
+    //std::cout << q << std::endl;
+    assert(!std::isnan(q));
+    return q;
+  };
 
-    //if (frames_batch.size() == 1) std::cout << deepRL::PrintQValues(q_values, legal_actions_);
+  std::transform(
+      legal_actions_.begin(),
+      legal_actions_.end(),
+      q_values.begin(),
+      action_evaluator);
+  //std::cout << PrintQValues(q_values,legal_actions_) << std::endl;
+  return q_values;
+}
 
-    // Select the action with the maximum Q value
+ActionPair DeepQLearner::MaxActionQvalue(std::vector<float> q_values){
     const auto max_idx =
         std::distance(
             q_values.begin(),
             std::max_element(q_values.begin(), q_values.end()));
 
-    results.emplace_back(legal_actions_[max_idx], q_values[max_idx]);
-  }
-  return results;
+    return std::make_pair(legal_actions_[max_idx],q_values[max_idx]);
 }
 
 
@@ -129,98 +119,67 @@ Action DeepQLearner::SelectAction(const InputFrames& last_frames) {
     action = legal_actions_[random_idx];
     //std::cout << action_to_string(action) << " (random)";
   } else {//max greedy
-    action = GreedyActionSelection(last_frames).first;// max 
+    action =  MaxActionQvalue(ForwardQvalue(input_frames,net_)).first;// max 
     //std::cout << action_to_string(action) << " (greedy)";
   }
   return action;
 }
 
-
-ActionPair DeepQLearner::GreedyActionSelection(const InputFrames& last_frames) {
-  return GetBatchQvalue(InputFramesVec{{last_frames}},net_).front();
-}
-
-
-void DeepQLearner::BatchUpdate() {
-  if (current_iter_%100 ==0)
-      std::cout << "iteration: " << current_iter_ << std::endl;
+void DeepQLearner::StepUpdate(const Transition& tr){//only using single inputframe
+ if (current_iter_%100 ==0)
+      std::cout << "iteration: " << current_iter_ << " , epsilon: " <<  epsilon_ << std::endl;
    current_iter_++;
 
-  // Sample transitions from replay memory
-  //std::cout << "==>begin sampling experiences" << std::endl;
-  std::vector<int> transitions = replay_memory_.sampleTransition();
-  
-  CHECK(transitions.size() == kMinibatchSize) << "Exeperience is not sampled enough";
-   
-  //std::cout << "<==end sampling experiences" << std::endl;
-  // for each transition <s,a,r,s'> ,compute the q values for s (net_)and s'(target_net_)
 
-  // Compute target values: max_a Q(s',a)
-  InputFramesVec target_last_frames_batch;
-  for (const auto idx : transitions) {
-    const auto& transition = replay_memory_.getTransitionByIdx(idx);
-    if (!std::get<3>(transition)) {
-      // This is a terminal state
-      continue;
-    }
-    // Compute target value
-    InputFrames target_last_frames;
+   //extract <s,a,r,s'>
+   InputFrames s = std::get<0>(tr);
+   const auto a = std::get<1>(tr); 
+   const auto r = std::get<2>(tr); assert(r >= -1.0 && r <= 1.0);
+   InputFrames s_;
+   const auto terminal = std::get<3>(tr) ? false : true;
+   if(!terminal) {
     for (auto i = 0; i < kInputFrameCount - 1; ++i) {
-      target_last_frames[i] = std::get<0>(transition)[i + 1];
+      s_[i] = std::get<0>(tr)[i + 1];
     }
-    target_last_frames[kInputFrameCount - 1] = std::get<3>(transition).get();
-    target_last_frames_batch.push_back(target_last_frames);
+    s_[kInputFrameCount - 1] = std::get<3>(tr).get();
   }
-  //get qvalue from target_net_
-  const auto actions_and_values = GetBatchQvalue(target_last_frames_batch,target_net_);
- 
+
+
+  const auto target_q = terminal ?//r+maxQ'(s,a)
+          r:
+          r + gamma * MaxActionQvalue(ForwardQvalue(s_,target_net_)).second;
+  assert(!std::isnan(target_q));
+
+
   //do data feeding -> train Q-network
   FramesLayerInputData frames_input;
   TargetLayerInputData target_input;
   FilterLayerInputData filter_input;
   std::fill(target_input.begin(), target_input.end(), 0.0f);
   std::fill(filter_input.begin(), filter_input.end(), 0.0f);
-  auto target_value_idx = 0;
-  //std::cout << "filling data" << std::endl;
-  for (auto i = 0; i < kMinibatchSize; ++i) {
-
-    const auto& transition = replay_memory_.getTransitionByIdx(transitions[i]);
-
-
-    const auto action = std::get<1>(transition);//action 
-    assert(static_cast<int>(action) < kOutputCount);
-
-    const auto reward = std::get<2>(transition);//reward
-    assert(reward >= -1.0 && reward <= 1.0);
-
-    const auto target = std::get<3>(transition) ?//r+maxQ'(s,a)
-          reward + gamma * actions_and_values[target_value_idx++].second :
-          reward;
-    assert(!std::isnan(target));
-
-    target_input[i * kOutputCount + static_cast<int>(action)] = target;
-    filter_input[i * kOutputCount + static_cast<int>(action)] = 1;
+  
+  // only the changed q has the loss
+  target_input[static_cast<int>(a)] = target_q;
+  filter_input[static_cast<int>(a)] = 1;
 
     //VLOG(1) << "filter:" << action_to_string(action) << " target:" << target;
 
 
     for (auto j = 0; j < kInputFrameCount; ++j) {
-      const auto& frame_data = std::get<0>(transition)[j];
+      const auto& frame_data = s[j];
       std::copy(
           frame_data->begin(),
           frame_data->end(),
-          frames_input.begin() + i * kInputDataSize +
-              j * kCroppedFrameDataSize);
+          frames_input.begin() + j * kCroppedFrameDataSize);
     }
 
-  }
   FillData2Layers(frames_input, target_input, filter_input);
  
   solver_->Step(1);
    
   //update target_net_ with frequency param: update_frequency_
-    if (update_frequency_ >0 and current_iter_%update_frequency_ ==0){
-	target_net_ = solver_->net(); // can we do like this ?
+  if (update_frequency_ >0 and current_iter_%update_frequency_ ==0){
+        target_net_ = solver_->net(); // can we do like this ?
   }
 
   //epsilon decay
@@ -234,6 +193,31 @@ void DeepQLearner::BatchUpdate() {
   }
 }
 
+void DeepQLearner::BatchUpdate() {
+  
+  // Sample transitions from replay memory
+  //std::cout << "==>begin sampling experiences" << std::endl;
+  std::vector<int> transitions = replay_memory_.sampleTransition();
+  
+  CHECK(transitions.size() == kMinibatchSize) << "Exeperience is not sampled enough";
+  
+  for (auto i = 0; i < kMinibatchSize; ++i) {
+
+    const auto& transition = replay_memory_.getTransitionByIdx(transitions[i]);
+    StepUpdate(transition);
+
+  }
+
+}
+
+
+
+
+
+
+ 
+
+
 void DeepQLearner::FillData2Layers(
       const FramesLayerInputData& frames_input,
       const TargetLayerInputData& target_input,
@@ -242,17 +226,17 @@ void DeepQLearner::FillData2Layers(
     frames_input_layer_->Reset(
       const_cast<float*>(frames_input.data()),//data
       dummy_input_data_.data(),//label
-      kMinibatchSize);//size n
+      1);//size n
 
     target_input_layer_->Reset(
       const_cast<float*>(target_input.data()),
       dummy_input_data_.data(),
-      kMinibatchSize);
+      1);
 
     filter_input_layer_->Reset(
       const_cast<float*>(filter_input.data()),
       dummy_input_data_.data(),
-      kMinibatchSize);
+      1);
 }
 
 }
