@@ -46,10 +46,13 @@ public:
   void LoadPretrainedModel(const std::string& model_file);
   //action selection - exploration and exploitation
   Action SelectAction(const InputFrames& input_frames);
-  //get ((action,q_values),...) from specified qnet and input frame
-  ActionPairVec GetBatchQvalue(const InputFramesVec & frames_batch,const NetSp& qnet);
+  ActionPair MaxActionQvalue(std::vector<float> q_values);
+  //one inputframe mode
+  std::vector<float> ForwardQvalue(const InputFrames& frames_input,const NetSp& qnet);
+  //one inputframe mode
   //network batch update 
-  void BatchUpdate();
+  void BatchUpdate();//using batch inputframes
+  void StepUpdate(const Transition& tr);//only using single transition
 
 public:
   //memory pool 
@@ -58,8 +61,6 @@ public:
   int current_iteration() const { return current_iter_; }
 
 private:
-  ActionPair GreedyActionSelection(const InputFrames& last_frames);
-  ActionPairVec GreedyActionSelection(const InputFramesVec& last_frames);
   void FillData2Layers(
       const FramesLayerInputData& frames_data,
       const TargetLayerInputData& target_data,
