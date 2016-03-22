@@ -5,7 +5,7 @@ layer {
   top: "frames"
   top: "dummy1"
   memory_data_param {
-    batch_size: 32
+    batch_size: 1
     channels: 4
     height: 84
     width: 84
@@ -17,8 +17,8 @@ layer {
   top: "target"
   top: "dummy2"
   memory_data_param {
-    batch_size: 32
-    channels: 18
+    batch_size: 1
+    channels: 4
     height: 1
     width: 1
   }
@@ -29,8 +29,8 @@ layer {
   top: "filter"
   top: "dummy3"
   memory_data_param {
-    batch_size: 32
-    channels: 18
+    batch_size: 1
+    channels: 4
     height: 1
     width: 1
   }
@@ -143,11 +143,7 @@ layer {
   bottom: "ip1"
   top: "q_values"
   inner_product_param {
-    num_output: 18
-    weight_filler {
-      type: "gaussian"
-      std: 0.01
-    }
+    num_output: 4
   }
 }
 layer {
@@ -156,7 +152,7 @@ layer {
   bottom: "filter"
   top: "fc_filter"
   inner_product_param {
-    num_output: 18
+    num_output: 4
   }
 }
 layer {
