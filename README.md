@@ -9,7 +9,7 @@ https://github.com/muupan/dqn-in-the-caffe
 
 Install dependencies
 --------------------
-caffe required 
+caffe required : https://github.com/BVLC/caffe
 
 bash setup.sh （only install the ALE environment）
 
