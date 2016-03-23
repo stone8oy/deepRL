@@ -145,6 +145,10 @@ layer {
   inner_product_param {
     num_output: 4
   }
+  weight_filler {
+    type: "gaussian"
+    std: 0.01
+  }
 }
 layer {
   name: "fc_filter"
