@@ -35,6 +35,18 @@ layer {
     width: 1
   }
 }
+  layer {
+    name: "reshape_filter"
+    type: "Reshape"
+    bottom: "filter"
+    top: "reshape_filter"
+    reshape_param {
+      shape {
+        dim: 0  # copy the dimension from below
+        dim: -1 # infer it from the other dimensions
+      }
+    }
+  }
 layer {
   name: "silence_layer"
   type: "Silence"
@@ -145,25 +157,16 @@ layer {
   inner_product_param {
     num_output: 4
     weight_filler {
-    type: "gaussian"
-    std: 0.01
-  }
-  }
-}
-layer {
-  name: "fc_filter"
-  type: "InnerProduct"
-  bottom: "filter"
-  top: "fc_filter"
-  inner_product_param {
-    num_output: 4
+      type: "gaussian"
+      std: 0.01
+    }
   }
 }
 layer {
   name: "eltwise_layer"
   type: "Eltwise"
   bottom: "q_values"
-  bottom: "fc_filter"
+  bottom: "reshape_filter"
   top: "filtered_q_values"
   eltwise_param {
     operation: PROD
