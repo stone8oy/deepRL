@@ -4,9 +4,10 @@ base_lr: 0.00025
 lr_policy: "fixed"
 momentum: 0.95
 weight_decay: 0.0005
+clip_gradients:1
 display: 1000
 max_iter: 100000
 snapshot: 50000
-snapshot_prefix: "snapshots/deepRL_ale_rmsprop"
+snapshot_prefix: "snapshots/rmsprop_nature"
 solver_mode: CPU
 rms_decay: 0.98
