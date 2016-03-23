@@ -26,5 +26,12 @@ args="--gpu ${GPU} --gui ${GUI} --rom ${rom} --epsilon_start ${epsilon_start} --
 
 echo ${args}
 
+# compile project deepRL 
+echo "=============================>Compling project: deepRL"
+rm CMakeCache.txt
+cp CMakeLists.cpu.txt CMakeLists.txt
+cmake .
+make clean & make -j2 2> build.errlog
+
 #run
 ./deepRL ${args}
