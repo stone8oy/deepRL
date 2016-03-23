@@ -1,7 +1,7 @@
 # deepRL
 deep-q-learning for atari games with caffe 
 
-Refered impls
+Referred impls
 -------------
 https://github.com/spragunr/deep_q_rl
 
