@@ -19,10 +19,11 @@ skip_frame=3
 show_frame=false
 model=null
 evaluate=false
+eval_epsilon=0.05
 
 
 
-args="--gpu ${GPU} --gui ${GUI} --rom ${rom} --epsilon_start ${epsilon_start} --epsilon_min ${epsilon_min} --epsilon_decay ${epsilon_decay} --epsilon_explore_idx ${epsilon_explore_idx} --replay_memory_capacity ${replay_memory_capacity} --replay_start_size ${replay_start_size} --sampleStrategy ${sampleStrategy} --update_frequency ${update_frequency} --discount_factor ${discount_factor} --solver ${solver} --skip_frame ${skip_frame} --show_frame ${show_frame} --model ${model} --evaluate ${evaluate}"
+args="--gpu ${GPU} --gui ${GUI} --rom ${rom} --eval_epsilon ${eval_epsilon} --epsilon_start ${epsilon_start} --epsilon_min ${epsilon_min} --epsilon_decay ${epsilon_decay} --epsilon_explore_idx ${epsilon_explore_idx} --replay_memory_capacity ${replay_memory_capacity} --replay_start_size ${replay_start_size} --sampleStrategy ${sampleStrategy} --update_frequency ${update_frequency} --discount_factor ${discount_factor} --solver ${solver} --skip_frame ${skip_frame} --show_frame ${show_frame} --model ${model} --evaluate ${evaluate}"
 
 echo ${args}
 
