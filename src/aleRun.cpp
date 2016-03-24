@@ -105,11 +105,11 @@ int main(int argc, char** argv) {
 
   if (argmap["model"].as<std::string>() !="null") {
     // Just evaluate the given trained model
+    dqlearner.LoadPretrainedModel(argmap["model"].as<std::string>());
     std::cout << "Loading " << argmap["model"].as<std::string>() << std::endl;
   }
   //evaluate mode
   if (argmap["evaluate"].as<bool>()) {
-    dqlearner.LoadPretrainedModel(argmap["model"].as<std::string>());
     auto total_score = 0.0;
       const auto score =
           EpisodeLearning(ale, dqlearner, false);
