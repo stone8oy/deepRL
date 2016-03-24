@@ -113,7 +113,10 @@ ActionPair DeepQLearner::MaxActionQvalue(std::vector<float> q_values){
 Action DeepQLearner::SelectAction(const InputFrames& last_frames) {
   assert(epsilon_ >= 0.0 && epsilon_ <= 1.0);
   Action action;
-  if (std::uniform_real_distribution<>(0.0, 1.0)(random_engine) < epsilon_) {//random
+  double valid_epsilon_ = epsilon_;//default TRAIN
+  if ( evaluate )  valid_epsilon_ = eval_epsilon;
+    
+  if (std::uniform_real_distribution<>(0.0, 1.0)(random_engine) < valid_epsilon_) {//random
     const auto random_idx =
         std::uniform_int_distribution<int>(0, legal_actions_.size() - 1)(random_engine);
     action = legal_actions_[random_idx];
