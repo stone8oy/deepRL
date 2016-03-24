@@ -112,11 +112,14 @@ ActionPair DeepQLearner::MaxActionQvalue(std::vector<float> q_values){
 
 Action DeepQLearner::SelectAction(const InputFrames& last_frames) {
   numSteps_++;
+  //update target_net_ with frequency param: target_q_freq
+  if ( target_q_freq >0 and numSteps_%target_q_freq ==0){
+        target_net_ = solver_->net(); // can we do like this ?
+  }  
   assert(epsilon_ >= 0.0 && epsilon_ <= 1.0);
   Action action;
   double valid_epsilon_ = epsilon_;//default TRAIN
   if ( evaluate )  valid_epsilon_ = eval_epsilon;
-    
   if (std::uniform_real_distribution<>(0.0, 1.0)(random_engine) < valid_epsilon_) {//random
     const auto random_idx =
         std::uniform_int_distribution<int>(0, legal_actions_.size() - 1)(random_engine);
@@ -180,11 +183,6 @@ void DeepQLearner::StepUpdate(const Transition& tr){//only using single inputfra
   FillData2Layers(frames_input, target_input, filter_input);
  
   solver_->Step(1);
-   
-  //update target_net_ with frequency param: update_frequency_
-  if ( target_q_freq >0 and numSteps_%target_q_freq ==0){
-        target_net_ = solver_->net(); // can we do like this ?
-  }
 
   //epsilon decay
     //std::cout << " epsilon:" << epsilon_ << std::endl;
