@@ -52,7 +52,8 @@ int main(int argc, char** argv) {
 	("skip_frame,p", po::value<int>()->default_value(3), "Number of frames skipped")
 	("show_frame,e", po::value<bool>()->default_value(false), "Show the current frame in CUI")
 	("model,l", po::value<std::string>()->default_value("")->required(), "Model file to load")
-	("evaluate,u", po::value<bool>()->default_value(false), "Evaluation mode: only playing a game, no updates");
+	("evaluate,u", po::value<bool>()->default_value(false), "Evaluation mode: only playing a game, no updates")
+	("eval_epsilon,k", po::value<double>()->default_value(0.05), "Epsilon used in evaluate mode");
 
 
            
@@ -100,7 +101,9 @@ int main(int argc, char** argv) {
 				argmap["sampleStrategy"].as<std::string>(),
 				argmap["update_frequency"].as<int>(),
 				argmap["discount_factor"].as<double>(),
-				argmap["solver"].as<std::string>());
+				argmap["solver"].as<std::string>(),
+				argmap["evaluate"].as<bool>(),
+                                argmap["eval_epsilon"].as<double>());
   dqlearner.Initialize();
 
   if (argmap["model"].as<std::string>() !="null") {
