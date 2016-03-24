@@ -24,7 +24,8 @@ public:
     const double discount_factor,
     const std::string solver_param，
     const bool evaluate_,
-    const double eval_epsilon_
+    const double eval_epsilon_，
+    const int target_q_freq_
     ):
       legal_actions_(legal_actions),
       epsilon_start_(epsilon_start),
@@ -40,6 +41,8 @@ public:
       evaluate(evaluate_),
       eval_epsilon(eval_epsilon_),
       current_iter_(0),
+      target_q_freq(target_q_freq_),
+      numSteps_(0),
       random_engine(0) {}
 public:
   //Initialize DeepQLearner.
@@ -61,6 +64,7 @@ public:
   MemoryReplay replay_memory_;
   //iteration idx
   int current_iteration() const { return current_iter_; }
+  int numSteps() const {return numSteps_;}
 
 private:
   void FillData2Layers(
@@ -82,11 +86,13 @@ private:
   const int update_frequency_;
   const double eval_epsilon;
   const bool evaluate;
+  const int target_q_freq;
 
 
 
 private:
   int current_iter_;
+  int numSteps_;
   SolverSp solver_;
   NetSp net_;
   NetSp target_net_;//every C steps copy from net_ , C = update frequency
