@@ -1,9 +1,7 @@
 #ifndef ALEAGENT_HPP_
 #define ALEAGENT_HPP_
 
-#include <memory>
 #include <random>
-#include <unordered_map>
 #include "memoryreplay.hpp"
 
 namespace deepRL {
