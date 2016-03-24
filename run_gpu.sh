@@ -33,5 +33,5 @@ cp CMakeLists.gpu.txt CMakeLists.txt
 cmake .
 make clean & make -j2 2> build.errlog
 
-#run
+#run , you need set solver_mode: GPU in your solver.prototxt
 ./deepRL ${args}
