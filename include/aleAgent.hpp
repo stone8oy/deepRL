@@ -22,7 +22,9 @@ public:
     const std::string sampleStrategy,
     const int update_frequency,
     const double discount_factor,
-    const std::string solver_param
+    const std::string solver_param，
+    const bool evaluate_,
+    const double eval_epsilon_
     ):
       legal_actions_(legal_actions),
       epsilon_start_(epsilon_start),
@@ -35,6 +37,8 @@ public:
       update_frequency_(update_frequency),
       gamma(discount_factor),
       solver_param_(solver_param),
+      evaluate(evaluate_),
+      eval_epsilon(eval_epsilon_),
       current_iter_(0),
       random_engine(0) {}
 public:
@@ -76,6 +80,9 @@ private:
   double epsilon_;
   const int replay_start_size_;
   const int update_frequency_;
+  const double eval_epsilon;
+  const bool evaluate;
+
 
 
 private:
