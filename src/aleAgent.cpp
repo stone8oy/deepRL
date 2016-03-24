@@ -111,6 +111,7 @@ ActionPair DeepQLearner::MaxActionQvalue(std::vector<float> q_values){
 
 
 Action DeepQLearner::SelectAction(const InputFrames& last_frames) {
+  numSteps_++;
   assert(epsilon_ >= 0.0 && epsilon_ <= 1.0);
   Action action;
   double valid_epsilon_ = epsilon_;//default TRAIN
@@ -181,7 +182,7 @@ void DeepQLearner::StepUpdate(const Transition& tr){//only using single inputfra
   solver_->Step(1);
    
   //update target_net_ with frequency param: update_frequency_
-  if (update_frequency_ >0 and current_iter_%update_frequency_ ==0){
+  if ( target_q_freq >0 and numSteps_%target_q_freq ==0){
         target_net_ = solver_->net(); // can we do like this ?
   }
 
