@@ -104,7 +104,7 @@ ActionPair DeepQLearner::MaxActionQvalue(std::vector<float> q_values){
     const auto max_idx =
         std::distance(
             q_values.begin(),
-            std::max_element(q_values.begin(), q_values.end()));
+            std::max_element(q_values.begin(), q_values.begin() + legal_actions_.size()));
 
     return std::make_pair(legal_actions_[max_idx],q_values[max_idx]);
 }
