@@ -167,10 +167,7 @@ void DeepQLearner::StepUpdate(const Transition& tr){//only using single inputfra
   
   // only the changed q has the loss
   target_input[static_cast<int>(a)] = target_q;
-  filter_input[static_cast<int>(a)] = 1;
-
-    //VLOG(1) << "filter:" << action_to_string(action) << " target:" << target;
-
+  filter_input[static_cast<int>(a)] = 1;//one-hot encoder
 
     for (auto j = 0; j < kInputFrameCount; ++j) {
       const auto& frame_data = s[j];
@@ -204,21 +201,10 @@ void DeepQLearner::BatchUpdate() {
   CHECK(transitions.size() == kMinibatchSize) << "Exeperience is not sampled enough";
   
   for (auto i = 0; i < kMinibatchSize; ++i) {
-
     const auto& transition = replay_memory_.getTransitionByIdx(transitions[i]);
     StepUpdate(transition);
-
   }
-
 }
-
-
-
-
-
-
- 
-
 
 void DeepQLearner::FillData2Layers(
       const FramesLayerInputData& frames_input,
