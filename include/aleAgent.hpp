@@ -22,9 +22,9 @@ public:
     const std::string sampleStrategy,
     const int update_frequency,
     const double discount_factor,
-    const std::string solver_param，
+    const std::string solver_param,
     const bool evaluate_,
-    const double eval_epsilon_，
+    const double eval_epsilon_,
     const int target_q_freq_
     ):
       legal_actions_(legal_actions),
@@ -51,13 +51,10 @@ public:
   void LoadPretrainedModel(const std::string& model_file);
   //action selection - exploration and exploitation
   Action SelectAction(const InputFrames& input_frames);
-  ActionPair MaxActionQvalue(std::vector<float> q_values);
-  //one inputframe mode
-  std::vector<float> ForwardQvalue(const InputFrames& frames_input,const NetSp& qnet);
-  //one inputframe mode
+  //batch q
+  ActionPairVec ForwardBatchMaxQvalue(const InputFramesVec& batch_frames,const NetSp& qnet);
   //network batch update 
-  void BatchUpdate();//using batch inputframes
-  void StepUpdate(const Transition& tr);//only using single transition
+  void MiniBatchUpdate();//using batch inputframes
 
 public:
   //memory pool 
@@ -95,7 +92,7 @@ private:
   int numSteps_;
   SolverSp solver_;
   NetSp net_;
-  NetSp target_net_;//every C steps copy from net_ , C = update frequency
+  NetSp target_net_;//every C steps copy from net_ , C = target_q_freq
   BlobSp q_values_blob_;
   MemoryDataLayerSp frames_input_layer_;
   MemoryDataLayerSp target_input_layer_;

@@ -32,9 +32,9 @@ using FrameDataSp = std::shared_ptr<FrameData>;
 using InputFrames = std::array<FrameDataSp, 4>;
 using Transition = std::tuple<InputFrames, Action, float, boost::optional<FrameDataSp>>;//experience
 
-using FramesLayerInputData = std::array<float, kCroppedFrameDataSize>;//caffe input 
-using TargetLayerInputData = std::array<float, 1 * kOutputCount>;//Q_target
-using FilterLayerInputData = std::array<float, 1 * kOutputCount>;//
+using FramesLayerInputData = std::array<float, kMinibatchDataSize>;//caffe input 
+using TargetLayerInputData = std::array<float, kMinibatchSize * kOutputCount>;//Q_target
+using FilterLayerInputData = std::array<float, kMinibatchSize * kOutputCount>;//
 
 using SolverSp = boost::shared_ptr<caffe::Solver<float>>;
 using NetSp = boost::shared_ptr<caffe::Net<float>>;

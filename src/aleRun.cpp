@@ -193,7 +193,7 @@ double EpisodeLearning( ALEInterface& ale, deepRL::DeepQLearner& dqlearner, cons
         // If the size of replay memory is enough, update DQN
         if (dqlearner.replay_memory_.memory_size() >= argmap["replay_start_size"].as<int>()
 	    and dqlearner.numSteps()%argmap["update_frequency"].as<int>()==0 ) {
-          dqlearner.BatchUpdate();
+          dqlearner.MiniBatchUpdate();
         }
       }
     }
