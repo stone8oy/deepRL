@@ -1,17 +1,28 @@
-<<<<<<< HEAD
-# discrete deepRL
+# deepRL
 deep-q-learning for atari games with caffe 
-=======
-# Farm of deepRL
->>>>>>> origin/master
 
-*This repo contains mainly four branches*
+Referred impls
+-------------
+https://github.com/spragunr/deep_q_rl
 
-[1] [discrete](https://github.com/stone8oy/deepRL/tree/discrete) 
+https://github.com/muupan/dqn-in-the-caffe
 
-[2] [continuous](https://github.com/stone8oy/deepRL/tree/continuous)
+Install dependencies
+--------------------
+caffe required : https://github.com/BVLC/caffe
 
-[3] [distributed](https://github.com/stone8oy/deepRL/tree/distributed)
+bash setup.sh （only install the ALE environment）
 
-[4] [resource](https://github.com/stone8oy/deepRL/tree/resource)
+Hacking features[coming soon]
+--------
+Heuristic action selector
 
+Towards unbiased-Q estimation
+
+Eligibility trace
+
+Run [cpu、gpu]
+---
+[cpu] bash run_cpu.sh 
+
+[gpu] bash run_gpu.sh
