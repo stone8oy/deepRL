@@ -1,33 +1,25 @@
-# deepRL resource , and welcome rich additions
+# deepRL resource
 
-Papers
-------
+*This page contains kinds of resource on topic - deep reinforcement learning, from papers ,researchers to forum, course, code, etc. Any valid addition pull request would be appreciated!*
+
+
+
+
+##Papers
 https://github.com/junhyukoh/deep-reinforcement-learning-papers
 
-RL Researcher
--------
+##RL Researcher
 http://www-anw.cs.umass.edu/rlr/list.html
 
-Reddit
------
-https://www.reddit.com/r/reinforcementlearning/
+##Forums
+[Reddit](https://www.reddit.com/r/reinforcementlearning/)
+[Quora](https://www.quora.com/topic/Reinforcement-Learning)
+[Zhihu](https://www.zhihu.com/topic/20039099)
 
-Quora
------
-https://www.quora.com/topic/Reinforcement-Learning
+##Course
 
-Zhihu
------
-https://www.zhihu.com/topic/20039099
+##Code
 
-Course
------
+##News
 
-Code
-----
-
-News
-------
-
-Other Related
------
+##Other Related
