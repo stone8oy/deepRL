@@ -21,10 +21,6 @@ uint8_t PixelToGrayscale(const pixel_t pixel);
 
 FrameDataSp PreprocessScreen(const ALEScreen& raw_screen);
 
-std::string DrawFrame(const FrameData& frame);
-
-std::string PrintQValues(const std::vector<float>& q_values, const ActionVect& actions);
-
 template <typename Dtype>
 bool HasBlobSize(
     const caffe::Blob<Dtype>& blob,

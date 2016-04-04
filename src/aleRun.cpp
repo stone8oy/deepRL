@@ -33,12 +33,12 @@ po::variables_map argmap;
 
 int main(int argc, char** argv) {
 
-    po::options_description desc("Valid options");
-    desc.add_options()
-        ("help,h", "Help message")
-        ("gpu,u", po::value<bool>()->default_value(false), "Use GPU to brew Caffe")
+  po::options_description desc("Valid options");
+  desc.add_options()
+  ("help,h", "Help message")
+  ("gpu,u", po::value<bool>()->default_value(false), "Use GPU to brew Caffe")
 	("gui,i", po::value<bool>()->default_value(false), "Open a GUI window")
-        ("rom,o", po::value<std::string>()->default_value("./roms/breakout.bin"), "Rom file to play")
+  ("rom,o", po::value<std::string>()->default_value("./roms/breakout.bin"), "Rom file to play")
 	("epsilon_start,s", po::value<double>()->default_value(1.0), "Epsilon start value for action selection")
 	("epsilon_min,m", po::value<double>()->default_value(0.1), "The final epsilon")
 	("epsilon_decay,d", po::value<double>()->default_value(0.98), "Epsilon decay ratio")
@@ -50,7 +50,6 @@ int main(int argc, char** argv) {
 	("discount_factor,n", po::value<double>()->default_value(0.98), "Discount factor of future rewards (0,1]")
 	("solver,v", po::value<std::string>()->default_value("./prototxt/aleSolver.prototxt")->required(), "Solver parameter file (*.prototxt)")
 	("skip_frame,p", po::value<int>()->default_value(3), "Number of frames skipped")
-	("show_frame,e", po::value<bool>()->default_value(false), "Show the current frame in CUI")
 	("model,l", po::value<std::string>()->default_value("")->required(), "Model file to load")
 	("evaluate,u", po::value<bool>()->default_value(false), "Evaluation mode: only playing a game, no updates")
 	("eval_epsilon,k", po::value<double>()->default_value(0.05), "Epsilon used in evaluate mode")
@@ -58,13 +57,13 @@ int main(int argc, char** argv) {
 
 
            
-    po::store(parse_command_line(argc, argv, desc), argmap);
-    po::notify(argmap);    
+  po::store(parse_command_line(argc, argv, desc), argmap);
+  po::notify(argmap);    
 
-    if (argmap.count("help")) {
-        std::cout << desc << std::endl;
-        return 0;
-    }
+  if (argmap.count("help")) {
+      std::cout << desc << std::endl;
+      return 0;
+  }
    
 
   google::InitGoogleLogging(argv[0]);
@@ -104,8 +103,9 @@ int main(int argc, char** argv) {
 				argmap["discount_factor"].as<double>(),
 				argmap["solver"].as<std::string>(),
 				argmap["evaluate"].as<bool>(),
-                                argmap["eval_epsilon"].as<double>(),
-                                argmap["target_q_freq"].as<int>());
+        argmap["eval_epsilon"].as<double>(),
+        argmap["target_q_freq"].as<int>());
+
   dqlearner.Initialize();
 
   if (argmap["model"].as<std::string>() !="null") {
@@ -124,6 +124,7 @@ int main(int argc, char** argv) {
 
   // learning mode
   for (auto episode = 0;; episode++) {
+    dqlearner.Reset();
     const auto score = EpisodeLearning(ale, dqlearner, true);
     std::cout << "Episode: " << episode << " ,Score: " << score << std::endl;
     if (episode % 10 == 0) {
@@ -146,9 +147,7 @@ double EpisodeLearning( ALEInterface& ale, deepRL::DeepQLearner& dqlearner, cons
   for (auto frame = 0; !ale.game_over(); ++frame) {
     //std::cout << "frame: " << frame << std::endl;
     const auto current_frame = deepRL::PreprocessScreen(ale.getScreen());
-    if (argmap["show_frame"].as<bool>()) {
-      std::cout << deepRL::DrawFrame(*current_frame) << std::endl;
-    }
+
     past_frames.push_back(current_frame);
     if (past_frames.size() < deepRL::kInputFrameCount) {
       // If there are not past frames enough for DQN input, just select NOOP
@@ -192,8 +191,8 @@ double EpisodeLearning( ALEInterface& ale, deepRL::DeepQLearner& dqlearner, cons
 	//std::cout << "Memorypool Size: " << dqlearner.replay_memory_.memory_size() << std::endl;
         // If the size of replay memory is enough, update DQN
         if (dqlearner.replay_memory_.memory_size() >= argmap["replay_start_size"].as<int>()
-	    and dqlearner.numSteps()%argmap["update_frequency"].as<int>()==0 ) {
-          dqlearner.MiniBatchUpdate();
+	           and dqlearner.numSteps()%argmap["update_frequency"].as<int>()==0 ) {
+             dqlearner.MiniBatchUpdate();
         }
       }
     }

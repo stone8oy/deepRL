@@ -47,6 +47,8 @@ public:
 public:
   //Initialize DeepQLearner.
   void Initialize();
+  //Reset agent
+  void Reset();
   //load pretrained model
   void LoadPretrainedModel(const std::string& model_file);
   //action selection - exploration and exploitation
@@ -84,6 +86,9 @@ private:
   const double eval_epsilon;
   const bool evaluate;
   const int target_q_freq;
+  //hacking features
+  const bool tuqb;//towards unbiased-q estimation
+  const bool enETrace;// enbale eligibility trace
 
 
 

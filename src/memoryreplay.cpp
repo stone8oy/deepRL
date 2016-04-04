@@ -8,7 +8,7 @@ namespace deepRL {
 	}
 
 	std::vector<int> MemoryReplay::sampleTransition(){
-                CHECK(memorypool.size()>=batch_size) << "memorypool is not enoough";
+        CHECK(memorypool.size()>=batch_size) << "memorypool is not enoough";
 	 	std::vector<int> transitions;
 	 	transitions.reserve(batch_size);
 	 	for (auto i = 0; i < batch_size; ++i) {
@@ -17,13 +17,13 @@ namespace deepRL {
     		transitions.push_back(random_transition_idx);
   		}
 
-                return transitions;
+        return transitions;
 	 }
 
-Transition MemoryReplay::getTransitionByIdx(const int idx)
-{
-   return memorypool[idx];
-}
+	Transition MemoryReplay::getTransitionByIdx(const int idx)
+	{
+  		return memorypool[idx];
+	}
 
 
 }

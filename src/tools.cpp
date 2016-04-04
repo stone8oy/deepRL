@@ -115,44 +115,6 @@ FrameDataSp PreprocessScreen(const ALEScreen& raw_screen) {
   return screen;
 }
 
-std::string DrawFrame(const FrameData& frame) {
-  std::ostringstream o;
-  for (auto row = 0; row < kCroppedFrameSize; ++row) {
-    for (auto col = 0; col < kCroppedFrameSize; ++col) {
-      o << std::hex <<
-          static_cast<int>(frame[row * kCroppedFrameSize + col] / 16);
-    }
-    o << std::endl;
-  }
-  return o.str();
-}
-
-std::string PrintQValues(
-    const std::vector<float>& q_values, const ActionVect& actions) {
-  assert(!q_values.empty());
-  assert(!actions.empty());
-  assert(q_values.size() == actions.size());
-  std::ostringstream actions_buf;
-  std::ostringstream q_values_buf;
-  for (auto i = 0; i < q_values.size(); ++i) {
-    const auto a_str =
-        boost::algorithm::replace_all_copy(
-            action_to_string(actions[i]), "PLAYER_A_", "");
-    const auto q_str = std::to_string(q_values[i]);
-    const auto column_size = std::max(a_str.size(), q_str.size()) + 1;
-    actions_buf.width(column_size);
-    actions_buf << a_str;
-    q_values_buf.width(column_size);
-    q_values_buf << q_str;
-  }
-  actions_buf << std::endl;
-  q_values_buf << std::endl;
-  return actions_buf.str() + q_values_buf.str();
-}
-
-
-
-
 }
 
 

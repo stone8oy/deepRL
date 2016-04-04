@@ -66,6 +66,11 @@ void DeepQLearner::Initialize() {
       *net_->blob_by_name("filter"), kMinibatchSize, kOutputCount, 1, 1));
 }
 
+void DeepQLearner::Reset(){
+  epsilon_ = epsilon_start_;
+  numSteps_ = 0;
+}
+
 ActionPairVec DeepQLearner::ForwardBatchMaxQvalue(const InputFramesVec& batch_frames,const NetSp& qnet){
 //(inputframe1,inputframe2,...,inputframe_batch_size)
   assert(batch_frames.size() <= kMinibatchSize);
