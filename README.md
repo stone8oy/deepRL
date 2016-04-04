@@ -1,4 +1,4 @@
-# deepRL resource , and weclome more additions
+# deepRL resource , and welcome rich additions
 
 Papers
 ------
