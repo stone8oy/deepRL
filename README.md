@@ -4,7 +4,6 @@
 
 
 
-
 ##Papers
 https://github.com/junhyukoh/deep-reinforcement-learning-papers
 
@@ -13,13 +12,16 @@ http://www-anw.cs.umass.edu/rlr/list.html
 
 ##Forums
 [Reddit](https://www.reddit.com/r/reinforcementlearning/)
+
 [Quora](https://www.quora.com/topic/Reinforcement-Learning)
+
 [Zhihu](https://www.zhihu.com/topic/20039099)
 
 ##Course
+[John Schulman, Pieter Abbeel](http://rll.berkeley.edu/deeprlcourse/)
+
+[David Silver](http://www0.cs.ucl.ac.uk/staff/d.silver/web/Teaching.html)
 
 ##Code
 
-##News
-
-##Other Related
+##Misc Links
