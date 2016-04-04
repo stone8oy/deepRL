@@ -1,6 +1,6 @@
-# deepRL resource
+# Reinforcement Learning Farm
 
-*This page contains kinds of resource on topic - deep reinforcement learning, from papers ,researchers to forum, course, code, etc. Any valid addition pull request would be appreciated!*
+*This page contains kinds of resource on topic - reinforcement learning, from papers ,researchers to forum, lectures, code, etc. Any valid addition pull request would be appreciated!*
 
 
 
@@ -17,7 +17,7 @@ http://www-anw.cs.umass.edu/rlr/list.html
 
 [Zhihu](https://www.zhihu.com/topic/20039099)
 
-##Course
+##Lectures
 [John Schulman, Pieter Abbeel](http://rll.berkeley.edu/deeprlcourse/)
 
 [David Silver](http://www0.cs.ucl.ac.uk/staff/d.silver/web/Teaching.html)
