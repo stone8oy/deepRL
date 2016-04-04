@@ -21,10 +21,8 @@ Towards unbiased-Q estimation
 
 Eligibility trace
 
-Run [cpu]
+Run [cpu、gpu]
 ---
-bash run_cpu.sh 
+[cpu] bash run_cpu.sh 
+[gpu] bash run_gpu.sh
 
-Run [gpu]
------
-bash run_gpu.sh
