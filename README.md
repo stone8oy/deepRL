@@ -24,5 +24,6 @@ Eligibility trace
 Run [cpu、gpu]
 ---
 [cpu] bash run_cpu.sh 
+
 [gpu] bash run_gpu.sh
 
