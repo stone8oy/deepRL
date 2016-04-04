@@ -3,8 +3,10 @@
 *This page contains kinds of resource /links on topic - reinforcement learning, from papers ,researchers to forum, lectures, code, etc. Any valid addition pull request would be appreciated!*
 
 
-##Papers
+##Theory
 https://github.com/junhyukoh/deep-reinforcement-learning-papers
+
+https://github.com/aikorea/awesome-rl#theory
 
 ##RL Researcher
 http://www-anw.cs.umass.edu/rlr/list.html
@@ -16,13 +18,10 @@ http://www-anw.cs.umass.edu/rlr/list.html
 |
 [Zhihu](https://www.zhihu.com/topic/20039099)
 
-##Lectures
-[John Schulman, Pieter Abbeel](http://rll.berkeley.edu/deeprlcourse/)
-|
-[David Silver](http://www0.cs.ucl.ac.uk/staff/d.silver/web/Teaching.html)
-
+##Codes
+https://github.com/aikorea/awesome-rl#codes
 
 ##Misc Links
-[Awesome reinforcement learning](https://github.com/aikorea/awesome-rl#codes)
+[Awesome reinforcement learning](https://github.com/aikorea/awesome-rl)
 
 
