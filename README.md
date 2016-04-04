@@ -13,6 +13,14 @@ caffe required : https://github.com/BVLC/caffe
 
 bash setup.sh （only install the ALE environment）
 
+Hacking features[coming soon]
+--------
+Heuristic action selector
+
+Towards unbiased-Q estimation
+
+Eligibility trace
+
 Run [cpu]
 ---
 bash run_cpu.sh 
