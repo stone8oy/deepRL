@@ -18,12 +18,13 @@ solver=./prototxt/aleSolver.prototxt
 skip_frame=3
 model=null
 evaluate=false
+doubleQ=true
 eval_epsilon=0.05
 target_q_freq=1000
 
 
 
-args="--gpu ${GPU} --gui ${GUI} --rom ${rom} --target_q_freq ${target_q_freq} --eval_epsilon ${eval_epsilon} --epsilon_start ${epsilon_start} --epsilon_min ${epsilon_min} --epsilon_decay ${epsilon_decay} --epsilon_explore_idx ${epsilon_explore_idx} --replay_memory_capacity ${replay_memory_capacity} --replay_start_size ${replay_start_size} --sampleStrategy ${sampleStrategy} --update_frequency ${update_frequency} --discount_factor ${discount_factor} --solver ${solver} --skip_frame ${skip_frame} --model ${model} --evaluate ${evaluate}"
+args="--gpu ${GPU} --gui ${GUI} --rom ${rom} --doubleQ ${doubleQ} --target_q_freq ${target_q_freq} --eval_epsilon ${eval_epsilon} --epsilon_start ${epsilon_start} --epsilon_min ${epsilon_min} --epsilon_decay ${epsilon_decay} --epsilon_explore_idx ${epsilon_explore_idx} --replay_memory_capacity ${replay_memory_capacity} --replay_start_size ${replay_start_size} --sampleStrategy ${sampleStrategy} --update_frequency ${update_frequency} --discount_factor ${discount_factor} --solver ${solver} --skip_frame ${skip_frame} --model ${model} --evaluate ${evaluate}"
 
 echo ${args}
 

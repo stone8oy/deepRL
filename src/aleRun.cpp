@@ -53,7 +53,8 @@ int main(int argc, char** argv) {
 	("model,l", po::value<std::string>()->default_value("")->required(), "Model file to load")
 	("evaluate,u", po::value<bool>()->default_value(false), "Evaluation mode: only playing a game, no updates")
 	("eval_epsilon,k", po::value<double>()->default_value(0.05), "Epsilon used in evaluate mode")
-	("target_q_freq,g", po::value<int>()->default_value(1000), "Taregt_q_net_ update frequency");
+	("target_q_freq,g", po::value<int>()->default_value(1000), "Taregt_q_net_ update frequency")
+  ("doubleQ,q", po::value<bool>()->default_value(false), "Enable double-Q learning");
 
 
            
@@ -104,7 +105,8 @@ int main(int argc, char** argv) {
 				argmap["solver"].as<std::string>(),
 				argmap["evaluate"].as<bool>(),
         argmap["eval_epsilon"].as<double>(),
-        argmap["target_q_freq"].as<int>());
+        argmap["target_q_freq"].as<int>(),
+        argmap["doubleQ"].as<bool>());
 
   dqlearner.Initialize();
 

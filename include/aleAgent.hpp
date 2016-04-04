@@ -25,7 +25,8 @@ public:
     const std::string solver_param,
     const bool evaluate_,
     const double eval_epsilon_,
-    const int target_q_freq_
+    const int target_q_freq_,
+    const bool doubleQ_
     ):
       legal_actions_(legal_actions),
       epsilon_start_(epsilon_start),
@@ -42,8 +43,10 @@ public:
       eval_epsilon(eval_epsilon_),
       current_iter_(0),
       target_q_freq(target_q_freq_),
+      doubleQ(doubleQ_),
+      eTrace(false),
       numSteps_(0),
-      random_engine(0) {}
+      random_engine(0){}
 public:
   //Initialize DeepQLearner.
   void Initialize();
@@ -54,7 +57,7 @@ public:
   //action selection - exploration and exploitation
   Action SelectAction(const InputFrames& input_frames);
   //batch q
-  ActionPairVec ForwardBatchMaxQvalue(const InputFramesVec& batch_frames,const NetSp& qnet);
+  ActionPairVec ForwardBatchMaxQvalue(const InputFramesVec& batch_frames,const NetSp& qnet,const bool& sep);
   //network batch update 
   void MiniBatchUpdate();//using batch inputframes
 
@@ -87,8 +90,8 @@ private:
   const bool evaluate;
   const int target_q_freq;
   //hacking features
-  const bool tuqb;//towards unbiased-q estimation
-  const bool enETrace;// enbale eligibility trace
+  const bool doubleQ;//enable double-Q learning
+  const bool eTrace;// enbale eligibility trace
 
 
 

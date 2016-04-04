@@ -11,17 +11,17 @@ https://github.com/muupan/dqn-in-the-caffe
 
 Install dependencies
 --------------------
-caffe required : https://github.com/BVLC/caffe
+[caffe](https://github.com/BVLC/caffe) required 
 
 bash setup.sh （only install the ALE environment）
 
 Hacking features[coming soon]
 --------
-Heuristic action selector
+[Double-Q learning](http://arxiv.org/pdf/1509.06461.pdf)
 
-Towards unbiased-Q estimation
+[Prioritized Experience Replay](http://arxiv.org/pdf/1511.05952v4.pdf)
 
-Eligibility trace
+[Eligibility trace](http://www.jmlr.org/papers/volume15/geist14a/geist14a.pdf)
 
 Run [cpu、gpu]
 ---

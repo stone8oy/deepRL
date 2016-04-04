@@ -71,7 +71,7 @@ void DeepQLearner::Reset(){
   numSteps_ = 0;
 }
 
-ActionPairVec DeepQLearner::ForwardBatchMaxQvalue(const InputFramesVec& batch_frames,const NetSp& qnet){
+ActionPairVec DeepQLearner::ForwardBatchMaxQvalue(const InputFramesVec& batch_frames,const NetSp& qnet,const bool& sep){
 //(inputframe1,inputframe2,...,inputframe_batch_size)
   assert(batch_frames.size() <= kMinibatchSize);
   std::array<float, kMinibatchDataSize> batch_frames_input;
@@ -88,6 +88,41 @@ ActionPairVec DeepQLearner::ForwardBatchMaxQvalue(const InputFramesVec& batch_fr
   }
 
   FillData2Layers(batch_frames_input, dummy_input_data_, dummy_input_data_);
+
+  //for double-Q
+  std::vector<int> max_act_idx;
+  max_act_idx.reserve(batch_frames.size());
+  if (sep){//double-Q
+    /*
+    *Q(s,argmaxQ(s,a,net_),target_net_) 
+    *qnet must be target_net_ now, so we just need to forward net_,
+    */
+    net_->Forward();
+    for (auto i = 0; i < batch_frames.size(); ++i) {
+      // Get the Q values from the net
+      const auto action_evaluator = [&](Action action) {
+        const auto q = q_values_blob_->data_at(i, static_cast<int>(action), 0, 0);
+        assert(!std::isnan(q));
+        return q;
+      };
+
+      std::vector<float> q_values(legal_actions_.size());
+      std::transform(
+        legal_actions_.begin(),
+        legal_actions_.end(),
+        q_values.begin(),
+        action_evaluator);
+
+      // Select the action with the maximum Q value
+      const auto max_idx =
+        std::distance(
+            q_values.begin(),
+            std::max_element(q_values.begin(), q_values.end()));
+
+      max_act_idx.push_back(max_idx);
+    }
+  }
+
   qnet->Forward();//test ,now we got the qvalue
 
   ActionPairVec results;
@@ -108,13 +143,27 @@ ActionPairVec DeepQLearner::ForwardBatchMaxQvalue(const InputFramesVec& batch_fr
         action_evaluator);
 
     // Select the action with the maximum Q value
-    const auto max_idx =
+    auto max_idx =
         std::distance(
             q_values.begin(),
             std::max_element(q_values.begin(), q_values.end()));
 
+    if(sep) { 
+      //this could check whether target is different from local Q
+      /*
+      if (max_idx != max_act_idx[i]){
+        std::cout << "target: " << max_idx << ", local: " << max_act_idx[i] << std::endl;
+        exit(1);//hacking test
+      }
+      */
+      max_idx = max_act_idx[i];
+    }
+
     results.emplace_back(legal_actions_[max_idx], q_values[max_idx]);
   }
+   
+  max_act_idx.clear();
+
   return results;
 }
 
@@ -124,7 +173,7 @@ Action DeepQLearner::SelectAction(const InputFrames& last_frames) {
   numSteps_++;
   //update target_net_ with frequency param: target_q_freq
   if ( target_q_freq >0 and numSteps_%target_q_freq ==0){
-        target_net_ = solver_->net(); // can we do like this ?
+        target_net_->ShareTrainedLayersWith(&*net_); // can we do like this ?
   } 
   assert(epsilon_ >= 0.0 && epsilon_ <= 1.0);
   Action action;
@@ -136,7 +185,7 @@ Action DeepQLearner::SelectAction(const InputFrames& last_frames) {
     action = legal_actions_[random_idx];
     //std::cout << action_to_string(action) << " (random)";
   } else {//max greedy
-    action = ForwardBatchMaxQvalue(InputFramesVec{{last_frames}},net_).front().first;// max 
+    action = ForwardBatchMaxQvalue(InputFramesVec{{last_frames}},net_,false).front().first;// max 
     //std::cout << action_to_string(action) << " (greedy)";
   }
   return action;
@@ -172,7 +221,7 @@ void DeepQLearner::MiniBatchUpdate() {
     target_last_frames_batch.push_back(target_last_frames);
   }
   //get qvalue from target_net_
-  const auto actions_and_values = ForwardBatchMaxQvalue(target_last_frames_batch,target_net_);
+  const auto actions_and_values = ForwardBatchMaxQvalue(target_last_frames_batch,target_net_,doubleQ);
  
   //do data feeding -> train Q-network
   FramesLayerInputData frames_input;

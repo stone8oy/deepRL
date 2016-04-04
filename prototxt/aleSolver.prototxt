@@ -1,4 +1,4 @@
-net: "./prototxt/qnet_nature.prototxt"
+net: "./prototxt/qnet_nips.prototxt"
 solver_type: RMSPROP
 base_lr: 0.00025
 lr_policy: "fixed"
@@ -8,6 +8,6 @@ clip_gradients:1
 display: 1000
 max_iter: 100000
 snapshot: 50000
-snapshot_prefix: "snapshots/rmsprop_nature"
+snapshot_prefix: "snapshots/rmsprop_nips"
 solver_mode: CPU
 rms_decay: 0.98
