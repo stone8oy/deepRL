@@ -20,7 +20,7 @@ bash setup.sh （only install the ALE environment）
 |
 [Eligibility trace](http://www.jmlr.org/papers/volume15/geist14a/geist14a.pdf)
 
-##Run [cpu、gpu]
+##Run
 [cpu] `bash run_cpu.sh`<br/> 
 
 [gpu] `bash run_gpu.sh`<br/>
