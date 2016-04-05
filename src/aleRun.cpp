@@ -4,7 +4,7 @@
 #include <glog/logging.h>
 #include <boost/program_options.hpp>
 //#include "prettyprint.hpp"
-#include "../include/aleAgent.hpp"
+#include "../include/agent.hpp"
 #include "../include/tools.hpp"
 
 /*

@@ -18,7 +18,7 @@ if(USE_CUDNN)
   link_directories(~/cudnn-6.5-linux-R1)
 endif()
 
-add_executable(deepRL ./src/aleRun.cpp ./src/aleAgent.cpp ./src/memoryreplay.cpp ./src/tools.cpp)
+add_executable(deepRL ./src/aleRun.cpp ./src/agent.cpp ./src/memoryreplay.cpp ./src/tools.cpp)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3 -Wall -g -march=native")
 

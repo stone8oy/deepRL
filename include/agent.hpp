@@ -1,5 +1,5 @@
-#ifndef ALEAGENT_HPP_
-#define ALEAGENT_HPP_
+#ifndef AGENT_HPP_
+#define AGENT_HPP_
 
 #include <random>
 #include "memoryreplay.hpp"
@@ -113,4 +113,4 @@ private:
 
 }
 
-#endif /* ALEAGENT_HPP_ */
+#endif /* AGENT_HPP_ */

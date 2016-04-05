@@ -8,7 +8,7 @@
 #include <glog/logging.h>
 
 #include "../include/tools.hpp"
-#include "../include/aleAgent.hpp"
+#include "../include/agent.hpp"
 
 
 namespace deepRL {
