@@ -11,7 +11,7 @@
 ##Prerequisites
 [caffe](https://github.com/BVLC/caffe) required 
 
-bash setup.sh （only install the ALE environment）
+`bash setup.sh` （only install the ALE environment)
 
 ##Hacking features[coming soon]
 [Double-Q learning](http://arxiv.org/pdf/1509.06461.pdf)
