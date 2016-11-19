@@ -20,7 +20,7 @@
 |
 [Eligibility trace](http://www.jmlr.org/papers/volume15/geist14a/geist14a.pdf)
 |
-[async-rl](https://arxiv.org/pdf/1602.01783v2.pdf)
+[Async-rl](https://arxiv.org/pdf/1602.01783v2.pdf)
 
 ##Run
 [cpu] `bash run_cpu.sh`<br/> 
