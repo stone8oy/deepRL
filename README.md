@@ -1,6 +1,6 @@
 # deepRL
 *deep-q-learning for atari games with caffe*
-
+##Resource Pool
 [Want to brew RL ? Click me ! ](https://github.com/stone8oy/deepRL/tree/resource)
 
 ##Referred impls
