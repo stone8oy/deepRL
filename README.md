@@ -1,4 +1,4 @@
-# Reinforcement Learning Farm
+# Reinforcement Learning Center
 
 *This page contains kinds of resource /links on topic - reinforcement learning, from papers ,researchers to forum, lectures, code, etc. Any valid addition pull request would be appreciated!*
 
