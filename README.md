@@ -8,7 +8,7 @@
 |
 [dqn-in-the-caffe](https://github.com/muupan/dqn-in-the-caffe)
 
-##Prerequisites
+## Prerequisites
 [caffe](https://github.com/BVLC/caffe) required 
 
 `bash setup.sh` （only install the ALE environment)
